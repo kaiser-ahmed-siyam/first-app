@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attribution SDK Test</title>
+</head>
+<body>
+  <h1>Attribution SDK Test</h1>
+  <button onclick="trackTestClick()">Track Test Click</button>
+  <script>
+    // SDK Initialization
+    window.attributionSDK = {
+      apiUrl: 'http://localhost:3000/track',
+      init: function() {
+        console.log('Attribution SDK initialized');
+      },
+      trackClick: function(data) {
+        fetch(`${this.apiUrl}/click`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(result => console.log('Click tracked:', result))
+        .catch(error => console.error('Error:', error));
+      }
+    };
+
+    // Initialize SDK
+    window.attributionSDK.init();
+
+    // Test function
+    function trackTestClick() {
+      window.attributionSDK.trackClick({
+        device_id: 'test123',
+        campaign_id: 'camp001',
+        fingerprint: 'fp_test',
+        ad_network: 'test_network',
+        ip: '127.0.0.1',
+        user_agent: navigator.userAgent,
+        referrer: document.referrer || 'direct',
+      });
+    }
+  </script>
+</body>
+</html>
